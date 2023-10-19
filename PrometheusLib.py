@@ -1,7 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
-import scipy
 from scipy.stats import f_oneway
 
 
@@ -64,29 +63,27 @@ def plot_pie_chart(datas, year):
     total = grouped_dt['Surface parcourue (ha)'].sum()
     grouped_dt['pourcentage'] = (grouped_dt['Surface parcourue (ha)']/total)*100
     counts = grouped_dt['pourcentage']
-    fig = px.pie(names=counts.index, values=counts, title='Camembert')
+    fig = px.pie(names=counts.index, values=counts, title=f'Proportion of wild fires per department in {year}')
     fig.update_traces(textinfo='percent+label', pull=[0.1, 0.1, 0.1, 0.1], hoverinfo='label+percent')
     fig.write_html('interactive_pie_chart.html')
 
-def test_stat(dataframe):
+def test_stat(dataframe, department):
     
-    # group datas
-    grouped = dataframe.groupby(['Année', 'Département'])['Surface parcourue (ha)'].sum()
-    df = pd.DataFrame(grouped)
-    df2 = df.reset_index(drop=False)
-    df3 = df2[['Département', 'Surface parcourue (ha)']]
-    
-    # ANOVA test
-    f_stat, p_value = f_oneway(*[df3['Surface parcourue (ha)'][df3['Département'] == dep] for dep in df3['Département'].unique()])
 
-    # Check the p-value and print result
+    # Filter the DataFrame for the department
+    department_data = dataframe[dataframe['Département'] == department]
+
+    # Filter the DataFrame for all other departments
+    other_departments_data = dataframe[dataframe['Département'] != department]
+
+    # Perform the ANOVA test to compare the specific department with all others
+    f_stat, p_value = f_oneway(department_data['Surface parcourue (ha)'], other_departments_data['Surface parcourue (ha)'])
+
+    # Check the p-value and print the result
     if p_value < 0.05:
-        print(f"There is a significant difference in means between departments (p-value: {p_value})")
+        print(f"There is a significant difference in means between the department {department} and other departments (p-value: {p_value})")
     else:
-        print(f"There is no significant difference in means between departments (p-value: {round(p_value, 4)})")
+        print(f"There is no significant difference in means between the department {department} and other departments (p-value: {round(p_value, 4)})")
 
-    
-    
-    
     
     

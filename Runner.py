@@ -1,8 +1,8 @@
-# riche-pro@hotmail.fr
-# 20/10 à 20h
-
-# command line to execute in the terminal : "runner.py [year] [department]" or "python runner.py [year] [department]"
+# command line to execute in the terminal : 
+# (1) "cd [path to the folder]"
+# (2) "python runner.py [year] [department]"      OR      "runner.py [year] [department]"
 # if no department chosen, the default value is '00' which selects all departments
+#
 # example : "runner.py 2013 13" ; for Bouches-du-Rhône in 2013
 # or : "runner.py 2013" ; for all departments in 2013
 #
@@ -31,7 +31,7 @@ burnt = burnt_area(dataframe, department, year)
 department, year, mean, Q1, Q3 = des(dataframe,department, year)
 plot_department_timeseries(dataframe, department)
 plot_pie_chart(dataframe, year)
-test_stat(dataframe)
+
 
 
 # Define datas as a list of lists (each inner list represents a row)
@@ -46,3 +46,8 @@ table = tabulate(data, headers=headers, tablefmt="grid")
 
 # Print the table row
 print(table)
+
+print("\n")
+
+# Run the test stat
+test_stat(dataframe, department)
