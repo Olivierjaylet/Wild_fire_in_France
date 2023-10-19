@@ -31,6 +31,7 @@ burnt = burnt_area(dataframe, department, year)
 department, year, mean, Q1, Q3 = des(dataframe,department, year)
 plot_department_timeseries(dataframe, department)
 plot_pie_chart(dataframe, year)
+test_stat(dataframe)
 
 
 # Define datas as a list of lists (each inner list represents a row)

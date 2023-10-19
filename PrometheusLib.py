@@ -1,6 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
+import scipy
+from scipy.stats import f_oneway
+
 
 def dataclean(csv_file): # data cleaning function
     df = pd.read_csv(csv_file, skiprows=2, sep=";") # store csv data in a dataframe, by skipping both first rows
@@ -65,7 +68,23 @@ def plot_pie_chart(datas, year):
     fig.update_traces(textinfo='percent+label', pull=[0.1, 0.1, 0.1, 0.1], hoverinfo='label+percent')
     fig.write_html('interactive_pie_chart.html')
 
+def test_stat(dataframe):
     
+    # group datas
+    grouped = dataframe.groupby(['Année', 'Département'])['Surface parcourue (ha)'].sum()
+    df = pd.DataFrame(grouped)
+    df2 = df.reset_index(drop=False)
+    df3 = df2[['Département', 'Surface parcourue (ha)']]
+    
+    # ANOVA test
+    f_stat, p_value = f_oneway(*[df3['Surface parcourue (ha)'][df3['Département'] == dep] for dep in df3['Département'].unique()])
+
+    # Check the p-value and print result
+    if p_value < 0.05:
+        print(f"There is a significant difference in means between departments (p-value: {p_value})")
+    else:
+        print(f"There is no significant difference in means between departments (p-value: {round(p_value, 4)})")
+
     
     
     
